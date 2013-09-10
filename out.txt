@@ -1,0 +1,9 @@
+
+-------------------------Agenda-----------------------------
+Action:
+l   - log in Agenada by user name and password
+r   - register an Agenda account
+q   - quit Agenda
+--------------------------------------------------------------
+
+Agenda : ~$ 
