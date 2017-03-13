@@ -43,7 +43,7 @@ string User::getPhone( ) {
 void User::setPhone( string p ){
 	phone = p;
 }
-//获得用户会议列表 
+ 
 list<Meeting> User::getAllMeetings() {
 	return (*meetingManage).listAllMeetings(name);
 }

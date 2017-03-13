@@ -1,37 +1,37 @@
 #include "AgendaController.h"
-#include<fstream>
+#include <fstream>
 #include <iostream>
 
 using namespace std;
 
-int main(){
-    while(1){
-    cout << "你想用批处理吗？(Y/N)" << endl;
-    string choice;
-    cin >> choice;
-    
-    if(choice == "N") break;  
-    //选择N  仍进入命令的输入 
-    else if( choice == "Y")  
-    //选择Y   则进行批处理文本命令输入 
+int main()
+{
+    while (1)
     {
-        freopen("in.txt","r",stdin);
-		freopen("out.txt","w",stdout);
-		break;
-    }
-    //其他的视为非法输入，重新进行输入 
-    else
-    {
-       cout << "command illegal!" << endl;
-    }
-    }
-    
-	AgendaController agendaController;   
-    // 生成UI层的对象 
+        cout << "锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷(Y/N)" << endl;
+        string choice;
+        cin >> choice;
 
-	agendaController.getOperation();  
-     // Agenda会议系统的接口 
-	
+        if (choice == "N")
+            break;
 
-	return 0;
+        else if (choice == "Y")
+
+        {
+            freopen("in.txt", "r", stdin);
+            freopen("out.txt", "w", stdout);
+            break;
+        }
+
+        else
+        {
+            cout << "command illegal!" << endl;
+        }
+    }
+
+    AgendaController agendaController;
+
+    agendaController.getOperation();
+
+    return 0;
 }

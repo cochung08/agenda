@@ -2,7 +2,6 @@
  *
  *-----------------------------------*/
 
-
 #include <iostream>
 #include <list>
 #include <string>
@@ -12,798 +11,834 @@
 using namespace std;
 using std::list;
 
-   //½âÎöÊäÈë 
-	bool AgendaController::executeOperation( string op )
-	{
-             if(op == "q")       return 0;   
-             // qÃüÁîÍË³öÏµÍ³ 
-		else if(op == "r")       userRegister();
-		else if(op == "l")       userLogIn();
-        else if ( op == "o" )    userLogOut();
-	    else if ( op == "dc" )   deleteUser();
-	    else if ( op == "lu" )	 listAllUsers();
-	    else if ( op == "cm" )   createMeeting();
-	    else if ( op == "la" )   listAllMeetings();
-	    else if ( op == "las" )  listAllSponsorMeetings();
-	    else if ( op == "lap" )  listAllParticipateMeetings();
-	    else if ( op == "qm" )   queryMeetingByTitle();
-	    else if ( op == "qt" )   queryMeetingByTimeInterval();
-	    else if ( op == "dm" )   deleteMeetingByTitle();
-	    else if ( op == "da" )   deleteAllMeetings();
-        else if ( op == "uup")   updateUserPassword();
-        else if ( op == "uue")   updateUserEmail();
-        else if ( op == "uuph")  updateUserPhone();
-        else if ( op == "ump" )	 updateMeetingParticipator();
-        else if ( op == "ums")   updateMeetingStartDate();
-        else if ( op == "ume" )	 updateMeetingEndDate();
-        else if ( op == "umt")   updateMeetingTitle();
-		else{
-			cout << "[error] command illegal\n";
-			getOperation();
-	    // Èç¹û²»ÊÇÒÔÉÏÃüÁî£¬ÔòÄ¬ÈÏÎª·Ç·¨ÊäÈë£¬ÎÞÐ§£¬ÖØÐÂ»ñµÃ²Ëµ¥ÊäÈë 
-		}
-	}
-   //ÓÃ»§µÇÂ¼ 
-	void AgendaController::userLogIn( )
-	{
-       //Èç¹ûÒÑ¾­µÇÂ¼£¬Ôò¸ÃÃüÁîÎÞÐ§£¬ÖØÐÂ»ñµÃ²Ëµ¥ÊäÈë 
-       if(currentUser != NULL) 
-       {
-           cout << "[error] command illegal\n";
-           getOperation();  
-       }
-       
-       else
-       { 
-         //´òÓ¡ÌáÊ¾ 
-          cout << "[log in] [user name] [password]\n";
-	      cout << "[log in] ";
-          
-          string username,password;
-          cin >> username >> password;
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+bool AgendaController::executeOperation(string op)
+{
+    if (op == "q")
+        return 0;
 
-         //µÇÂ¼Ê§°Ü 
-          if((currentUser = agendaService.userLogIn(username,password)) == NULL)
-		  {
-            printf("[error] log in fail!\n");
-			getOperation();
-		  }
-		  //µÇÂ¼³É¹¦ 
-          else
-          {
-            printf("[log in] succeed!\n"); 
-            cout<<"----------------------- Agenda -------------------------------\n"
-				<<"Action :                                                      \n"
-				<<"o   - log out Agenda account                                  \n"
-				<<"dc  - delete Agenda account                                   \n"
-				<<"lu  - list all Agenda user                                    \n"
-				<<"cm  - create a meeting                                        \n"
-				<<"la  - list all meetings                                       \n"
-				<<"las - list all sponsor meetings                               \n"
-				<<"lap - list all participate meetings                           \n"
-				<<"qm  - query meeting by title                                  \n"
-				<<"qt  - query meeting by time interval                          \n"
-				<<"dm  - delete meeting by title                                 \n"
-				<<"da  - delete all meetings                                     \n"
-				<<"uup - update user password                                    \n"
-				<<"uue - update user email                                       \n"
-				<<"uuph - update user phone                                      \n"
-				<<"ump - update meeting participator                             \n"
-				<<"ums - update meeting startDate                                \n"
-				<<"ume - update meeting endDate                                  \n"
-				<<"umt - uodate meeting title                                    \n"
-				<<"-----------------------------------------------------------\n\n";
-			//»ñµÃµÇÂ¼½øÈ¥ÁËµÄ½çÃæ²Ëµ¥ 
-            getOperation();
-        }  
-      }
-    }
-    
-	void AgendaController::userRegister( )
-	{  
-       //Èç¹ûÒÑ¾­µÇÂ¼£¬Ôò¸ÃÃüÁîÎÞÐ§£¬ÖØÐÂ»ñµÃ²Ëµ¥ÊäÈë
-        if(currentUser != NULL) 
-        {
-              cout << "[error] command illegal\n";
-              getOperation();  
-        }
-        //Î´µÇÂ¼ 
-        else{
-            
-             cout << "[register] [user name] [password] [email] [phone]\n";
-	         cout << "[register] ";
-             
-             string username,password,email,phone;
-             cin >> username >> password >> email >> phone;
-       
-         // ×¢²á³É¹¦ 
-            if(agendaService.userRegister(username,password,email,phone))
-            {
-               printf("[register] succeed!\n");
-               getOperation();
-            }
-        // ×¢²áÊ§°Ü 
-            else
-            {
-               printf("register fail\n");
-               getOperation();
-            }
-        }
-    }
-    
-    //µÇ³ö 
-	void AgendaController::userLogOut( )
-	{
-      
-       if(currentUser!=NULL)
-       {
-          currentUser = NULL;  //°Ñµ±Ç°ÓÃ»§Ö¸ÕëÉèÎª¿Õ 
-          getOperation();
-       }
-       //Èç¹ûÎ´µÇÂ¼£¬Ôò¸ÃÃüÁîÎÞÐ§£¬ÖØÐÂ»ñµÃ²Ëµ¥ÊäÈë
-       else
-       {
-              cout << "[error] command illegal\n";
-              getOperation();                
-       }
-    }
-    
-    void AgendaController::deleteUser(){
-        
-	if(currentUser!=NULL){
-        //É¾³ý³É¹¦ 
-		    if(agendaService.deleteUser(*currentUser)){
-			   cout<<endl;
-			   cout<<"[delete agenda account] succeed!"<<endl;
-			   userLogOut();  //É¾³ý³É¹¦Í¬Ê±»¹ÒªÖ´ÐÐµÇ³ö²Ù×÷ 
-		    }
-		//É¾³ýÊ§°Ü   
-		   else{
-		      cout<<"\n[error] delete agenda account fail!"<<endl;
-			  getOperation();
-		    }
-	}
-	////Èç¹ûÎ´µÇÂ¼£¬Ôò¸ÃÃüÁîÎÞÐ§£¬ÖØÐÂ»ñµÃ²Ëµ¥ÊäÈë 
-	else{
-              cout << "[error] command illegal\n";
-              getOperation(); 
-	}
-}
-    
-	void AgendaController::listAllUsers()
-	{
-        if(currentUser!=NULL)
-       {
-          list <User> userslist;
-          list <User>::iterator it;
-          userslist = agendaService.listAllUsers();//Í¨¹ýService²ã¸³ÖµUserÁÐ±í 
-         //´òÓ¡±êÍ·     
-          printf("\n");
-          printf("[list all users]\n");
-          cout<<left<<setw(8)<<"name"<<setw(17)<<"email"<<setw(11)<<"phone"<<endl;
-         //´òÓ¡ÁÐ±í 
-          for(it = userslist.begin();it!=userslist.end();it++)
-            cout<<left<<setw(8)<<it->getName()<<setw(17)<<it->getEmail()<<setw(11)<<it->getPhone()<<endl;
-     
-          getOperation();
-    }
-    //Èç¹ûÎ´µÇÂ¼£¬Ôò¸ÃÃüÁîÎÞÐ§£¬ÖØÐÂ»ñµÃ²Ëµ¥ÊäÈë
+    else if (op == "r")
+        userRegister();
+    else if (op == "l")
+        userLogIn();
+    else if (op == "o")
+        userLogOut();
+    else if (op == "dc")
+        deleteUser();
+    else if (op == "lu")
+        listAllUsers();
+    else if (op == "cm")
+        createMeeting();
+    else if (op == "la")
+        listAllMeetings();
+    else if (op == "las")
+        listAllSponsorMeetings();
+    else if (op == "lap")
+        listAllParticipateMeetings();
+    else if (op == "qm")
+        queryMeetingByTitle();
+    else if (op == "qt")
+        queryMeetingByTimeInterval();
+    else if (op == "dm")
+        deleteMeetingByTitle();
+    else if (op == "da")
+        deleteAllMeetings();
+    else if (op == "uup")
+        updateUserPassword();
+    else if (op == "uue")
+        updateUserEmail();
+    else if (op == "uuph")
+        updateUserPhone();
+    else if (op == "ump")
+        updateMeetingParticipator();
+    else if (op == "ums")
+        updateMeetingStartDate();
+    else if (op == "ume")
+        updateMeetingEndDate();
+    else if (op == "umt")
+        updateMeetingTitle();
     else
     {
-              cout << "[error] command illegal\n";
-              getOperation();         
-    }
-   }
-	
-    void AgendaController::createMeeting( ){
-	
-       if(currentUser!=NULL){
-	          cout<<endl;
-		      cout<<"[create meeting] [title] [participator] [start time(yyyy-mm-dd/hh:mm)] [end time(yyyy-mm-dd/hh:mm)]"<<'\n'
-		          <<"[create meeting] ";
-	
-	    string title,participator,stime,etime;
-	    
-	    cin>>title>>participator>>stime>>etime;
-
-		UserManage *userManage = UserManage::getInstance();
-       //²Î»áÕß´æÔÚ¸ÃÓÃ»§µÄ»° 
-		if((userManage->findUserByName(participator)) != NULL){
-            
-            //³É¹¦create  
-		      if(agendaService.createMeeting(currentUser->getName(),title,participator,Date::convertStringToDate(stime),Date::convertStringToDate(etime)))
-	         {
-			    cout<<"[create meeting] succeed!"<<endl;
-			    getOperation();
-		     }
-		     //createÊ§°Ü 
-		     else{
-			    cout<<"[error] create meeting fail!"<<endl;
-			    getOperation();
-		    }
-		}
-		//²»´æÔÚ¸ÃÓÃ»§£¬createÎÞÐ§ 
-		else{
-		    	cout<<"[error] create meeting fail!"<<endl;
-			    getOperation();
-		   }
-			
-		}
-		//Èç¹ûÎ´µÇÂ¼£¬Ôò¸ÃÃüÁîÎÞÐ§£¬ÖØÐÂ»ñµÃ²Ëµ¥ÊäÈë
-	   else{
-              cout << "[error] command illegal\n";
-              getOperation(); 
-	    }
-   }
-
-   //´òÓ¡ËùÓÐÏà¹Ø»áÒé 
-	void AgendaController::listAllMeetings( )
-	{
-     	if(currentUser!=NULL){
-		   cout<<endl;
-		   //´òÓ¡±êÍ· 
-		   cout<<"[list all meetings]"<<endl<<endl;
-		   cout<<left<<setw(13)<<"title"<<setw(13)<<"sponsor"<<setw(17)<<"participator"
-			   <<setw(17)<<"start time"<<setw(17)<<"end time"<<endl;   
-		   
-           MeetingManage* m = MeetingManage::getInstance();
-           list<Meeting> meetings;
-		   meetings = m->listAllMeetings( currentUser->getName());
-		   printMeetings(meetings);
-		   //´òÓ¡MeetingÁÐ±í 
-		   
-		   getOperation();
-       }	
-       //Èç¹ûÎ´µÇÂ¼£¬Ôò¸ÃÃüÁîÎÞÐ§£¬ÖØÐÂ»ñµÃ²Ëµ¥ÊäÈë
-       else
-       {
-              cout << "[error] command illegal\n";
-              getOperation(); 
-        }
-    }
-    //´òÓ¡ËùÓÐ·¢ÆðÕßÁÐ±í 
-	void AgendaController::listAllSponsorMeetings( )
-	{
-        if(currentUser!=NULL){
-	 	  cout<<endl;
-	 	  //´òÓ¡±êÍ· 
-		  cout<<"[list all sponsor meetings]"<<endl<<endl;
-		  cout<<left<<setw(13)<<"title"<<setw(13)<<"sponsor"<<setw(17)<<"participator"
-			  <<setw(17)<<"start time"<<setw(17)<<"end time"<<endl;
-			  
-           MeetingManage* m = MeetingManage::getInstance();
-           list<Meeting> meetings;
-		   meetings = m->listAllSponsorMeetings( currentUser->getName());
-		   printMeetings(meetings);
-		   //´òÓ¡·¢ÆðÕßMeetingÁÐ±í 
-		   getOperation();
-        }
-        //Èç¹ûÎ´µÇÂ¼£¬Ôò¸ÃÃüÁîÎÞÐ§£¬ÖØÐÂ»ñµÃ²Ëµ¥ÊäÈë
-        else
-        {
-              cout << "[error] command illegal\n";
-              getOperation(); 
-        }
-    }
-    //´òÓ¡²Î»áÕßMeetingÁÐ±í 
-	void AgendaController::listAllParticipateMeetings( )
-    {
-     	if(currentUser!=NULL){
-		  cout<<endl;
-		  //´òÓ¡±êÍ· 
-		  cout<<"[list all participate meetings]"<<endl<<endl;
-		  cout<<left<<setw(13)<<"title"<<setw(13)<<"sponsor"<<setw(17)<<"participator"
-			  <<setw(17)<<"start time"<<setw(17)<<"end time"<<endl;
-			  
-           MeetingManage* m = MeetingManage::getInstance();
-           list<Meeting> meetings;
-		   meetings = m->listAllParticipateMeetings( currentUser->getName());
-		   printMeetings(meetings);
-           //´òÓ¡²Î»áÕßMeetingÁÐ±í 
-           getOperation(); 
-        }   
-        //Èç¹ûÎ´µÇÂ¼£¬Ôò¸ÃÃüÁîÎÞÐ§£¬ÖØÐÂ»ñµÃ²Ëµ¥ÊäÈë        
-        else
-        {
-              cout << "[error] command illegal\n";
-              getOperation();    
-        }     
-    }
-    //¸ù¾ÝTitle²éÑ¯»áÒé 
-	void AgendaController::queryMeetingByTitle( )
-	{
-       	if(currentUser!=NULL){
-		   cout<<endl;
-		   cout<<"[query meeting] [title]:"<<endl;
-		   cout<<"[query meeting] ";
-		   
-		   string title;
-		   cin >> title;
-		   
-		   cout<<left<<setw(15)<<"sponsor"<<setw(15)<<"participator"
-			   <<setw(25)<<"start time"<<setw(25)<<"end time";
-			   
-		   Meeting* meeting = NULL;
-		 //´æÔÚTitle»áÒéµÄ»° 
-		  if( (meeting = agendaService.meetingQuery(title) ) != NULL ){
-            
-			cout<<left<<setw(15)<<meeting->getSponsor()<<setw(15)<<meeting->getParticipator()
-				<<setw(25)<<Date::convertDateToString(meeting->getStartDate())<<setw(25)
-				<<Date::convertDateToString(meeting->getEndDate())<<endl;
-		  		
-			getOperation();
-           }
-           //Ã»ÓÐ¸ÃTitle»áÒéµÄ»° 
-           else
-           {cout << endl << endl;}
-           
-           getOperation();
-       }
-       //Èç¹ûÎ´µÇÂ¼£¬Ôò¸ÃÃüÁîÎÞÐ§£¬ÖØÐÂ»ñµÃ²Ëµ¥ÊäÈë
-       else
-       {
-              cout << "[error] command illegal\n";
-              getOperation();     
-        }
-			             
-    }
-    //¸ù¾ÝÊ±¼ä²éÑ¯»áÒé 
-	void AgendaController::queryMeetingByTimeInterval( )
-	{
-        if(currentUser != NULL){
-		    cout<<endl;
-		    cout<<"[query meetings] [start time(yyyy-mm-dd/hh:mm)] [end time(yyyy-mm-dd/hh:mm)]"<<endl;
-		    cout<<"[query meetings] ";  
-		    
-		string stime,etime;
-		
-		cin>>stime>>etime;
-		//ÊäÈëÊ±¼ä²»ºÏ·¨
-		if(stime>etime||stime==etime)
-			{cout << "[checked date illegal]!"<<endl;
-		     getOperation();
-		     }
-      
-		else
-		{
-		cout<<endl<<"[query meetings]"<<endl;
-		cout<<left<<setw(13)<<"title"<<setw(13)<<"sponsor"<<setw(17)<<"participator"
-			<<setw(17)<<"start time"<<setw(17)<<"end time"<<endl;
-		//´òÓ¡»áÒéÁÐ±í 
-        printMeetings(agendaService.meetingQuery(currentUser->getName(),Date::convertStringToDate(stime),Date::convertStringToDate(etime)));
+        cout << "[error] command illegal\n";
         getOperation();
-        }
-	   }
-	   //Èç¹ûÎ´µÇÂ¼£¬Ôò¸ÃÃüÁîÎÞÐ§£¬ÖØÐÂ»ñµÃ²Ëµ¥ÊäÈë
-       else
-       {
-              cout << "[error] command illegal\n";
-              getOperation();     
-        }
     }
-    //¸ù¾ÝTitleÉ¾³ý»áÒé 
-	void AgendaController::deleteMeetingByTitle()
-	{
-     	if(currentUser != NULL){
-		    cout<<endl;
-		    cout<<"[delete meeting] [title]"<<'\n'
-			    <<"[delete meeting] ";
+}
 
-		    string title;
-		    cin>>title;
-            //É¾³ý³É¹¦ 
-            if( agendaService.deleteMeeting(currentUser->getName(),title) ){
-			      cout<<endl<<"[delete meeting by title] succeed!"<<endl;
-                  getOperation();			
-		     }
-		     //É¾³ýÊ§°Ü 
-		    else{
-			      cout<<endl<<"[error] delete meeting fail!"<<endl;
-			      getOperation();
-		     }
-		
-	    }
-	    //Èç¹ûÎ´µÇÂ¼£¬Ôò¸ÃÃüÁîÎÞÐ§£¬ÖØÐÂ»ñµÃ²Ëµ¥ÊäÈë
-	   else{
-		      cout << "[error] command illegal\n";
-              getOperation(); 
-       }  
-    }
-    //É¾³ýËùÓÐ»áÒé 
-	void AgendaController::deleteAllMeetings()
-	{
-        if(currentUser != NULL){
-		      cout<<endl;
-		 //É¾³ý³É¹¦ 
-		   if( agendaService.deleteAllMeetings(currentUser->getName()) ){
-			  cout<<"[delete all meetings] succeed!"<<endl;
-			  getOperation();
-		   }
-		 //É¾³ýÊ§°Ü 
-		   else{
-		     cout << endl << "[error] delete all meetings fail!" << endl;
-		     getOperation();
-           }
-	    }
-	    //Èç¹ûÎ´µÇÂ¼£¬Ôò¸ÃÃüÁîÎÞÐ§£¬ÖØÐÂ»ñµÃ²Ëµ¥ÊäÈë
-	    else
-	       {
-              cout << "[error] command illegal\n";
-              getOperation();     
-            }
+void AgendaController::userLogIn()
+{
+
+    if (currentUser != NULL)
+    {
+        cout << "[error] command illegal\n";
+        getOperation();
     }
 
-	void AgendaController::printMeetings( list<Meeting> meetings )
-	{
-        //ÁÐ±íÎª¿Õ 
-        if(meetings.empty())
+    else
+    {
+
+        cout << "[log in] [user name] [password]\n";
+        cout << "[log in] ";
+
+        string username, password;
+        cin >> username >> password;
+
+        if ((currentUser = agendaService.userLogIn(username, password)) == NULL)
         {
-           cout << endl;    
+            printf("[error] log in fail!\n");
+            getOperation();
         }
-        //ÁÐ±í²»Îª¿Õ 
+
         else
-        {   
-            list<Meeting>::iterator it;
-            for(it = meetings.begin();it != meetings.end();it++)
-           {
-			  // ´òÓ¡ 
-			    cout<<left<<setw(13)<<it->getTitle()<<setw(13)<<it->getSponsor()<<setw(17)<<it->getParticipator()
-				    <<setw(17)<<Date::convertDateToString(it->getStartDate())<<setw(17)
-				    <<Date::convertDateToString(it->getEndDate())<<endl;   
-           }
+        {
+            printf("[log in] succeed!\n");
+            cout << "----------------------- Agenda -------------------------------\n"
+                 << "Action :                                                      \n"
+                 << "o   - log out Agenda account                                  \n"
+                 << "dc  - delete Agenda account                                   \n"
+                 << "lu  - list all Agenda user                                    \n"
+                 << "cm  - create a meeting                                        \n"
+                 << "la  - list all meetings                                       \n"
+                 << "las - list all sponsor meetings                               \n"
+                 << "lap - list all participate meetings                           \n"
+                 << "qm  - query meeting by title                                  \n"
+                 << "qt  - query meeting by time interval                          \n"
+                 << "dm  - delete meeting by title                                 \n"
+                 << "da  - delete all meetings                                     \n"
+                 << "uup - update user password                                    \n"
+                 << "uue - update user email                                       \n"
+                 << "uuph - update user phone                                      \n"
+                 << "ump - update meeting participator                             \n"
+                 << "ums - update meeting startDate                                \n"
+                 << "ume - update meeting endDate                                  \n"
+                 << "umt - uodate meeting title                                    \n"
+                 << "-----------------------------------------------------------\n\n";
+
+            getOperation();
         }
     }
-	
-	AgendaController::AgendaController( )
-	{
+}
+
+void AgendaController::userRegister()
+{
+
+    if (currentUser != NULL)
+    {
+        cout << "[error] command illegal\n";
+        getOperation();
+    }
+    //Î´ï¿½ï¿½Â¼
+    else
+    {
+
+        cout << "[register] [user name] [password] [email] [phone]\n";
+        cout << "[register] ";
+
+        string username, password, email, phone;
+        cin >> username >> password >> email >> phone;
+
+        if (agendaService.userRegister(username, password, email, phone))
+        {
+            printf("[register] succeed!\n");
+            getOperation();
+        }
+
+        else
+        {
+            printf("register fail\n");
+            getOperation();
+        }
+    }
+}
+
+void AgendaController::userLogOut()
+{
+
+    if (currentUser != NULL)
+    {
         currentUser = NULL;
+        getOperation();
     }
-    
-    //»ñµÃ²Ëµ¥ÊäÈë 
-	void AgendaController::getOperation( )
-    {
-         if(currentUser == NULL){
-               	cout << "\n-------------------------Agenda-----------------------------\n";
-	            cout << "Action:\n";
-	            cout << "l   - log in Agenada by user name and password\n";
-	            cout << "r   - register an Agenda account\n";
-	            cout << "q   - quit Agenda\n";
-	            cout << "--------------------------------------------------------------\n";
-	            cout << "\nAgenda : ~$ ";
-        }  
-        else
-        {
-                cout << endl << "Agenda@" <<currentUser->getName()<<" : # "; 
-        }
-         
-        string input;
-		input = "";
-        cin >> input;
-        if(input == ""){
-        	cin.clear();
-			cin.rdstate();
-			cin.fixed;
-			fclose(stdin);
-			fclose(stdout);
-        } 
-        //ÊäÈëÖ¸Áî 
-        executeOperation(input);
-        //½âÎöÃüÁî 
 
-    }
-    
-    
-    void AgendaController::updateUserPassword()
+    else
     {
-        if(currentUser != NULL){
-		    cout<<endl;
-		    cout<<"[update user] [password]"<<'\n'
-			    <<"[update user] ";
-			    
-			string password;
-			cin >> password;
-			
-			if(agendaService.updateUserPassword(*currentUser,password))
-			{
-               cout << "update password succeed!"<< endl;
-               getOperation();
+        cout << "[error] command illegal\n";
+        getOperation();
+    }
+}
+
+void AgendaController::deleteUser()
+{
+
+    if (currentUser != NULL)
+    {
+
+        if (agendaService.deleteUser(*currentUser))
+        {
+            cout << endl;
+            cout << "[delete agenda account] succeed!" << endl;
+            userLogOut();
+        }
+
+        else
+        {
+            cout << "\n[error] delete agenda account fail!" << endl;
+            getOperation();
+        }
+    }
+
+    else
+    {
+        cout << "[error] command illegal\n";
+        getOperation();
+    }
+}
+
+void AgendaController::listAllUsers()
+{
+    if (currentUser != NULL)
+    {
+        list<User> userslist;
+        list<User>::iterator it;
+        userslist = agendaService.listAllUsers();
+
+        printf("\n");
+        printf("[list all users]\n");
+        cout << left << setw(8) << "name" << setw(17) << "email" << setw(11) << "phone" << endl;
+
+        for (it = userslist.begin(); it != userslist.end(); it++)
+            cout << left << setw(8) << it->getName() << setw(17) << it->getEmail() << setw(11) << it->getPhone() << endl;
+
+        getOperation();
+    }
+
+    else
+    {
+        cout << "[error] command illegal\n";
+        getOperation();
+    }
+}
+
+void AgendaController::createMeeting()
+{
+
+    if (currentUser != NULL)
+    {
+        cout << endl;
+        cout << "[create meeting] [title] [participator] [start time(yyyy-mm-dd/hh:mm)] [end time(yyyy-mm-dd/hh:mm)]" << '\n'
+             << "[create meeting] ";
+
+        string title, participator, stime, etime;
+
+        cin >> title >> participator >> stime >> etime;
+
+        UserManage *userManage = UserManage::getInstance();
+
+        if ((userManage->findUserByName(participator)) != NULL)
+        {
+
+            if (agendaService.createMeeting(currentUser->getName(), title, participator, Date::convertStringToDate(stime), Date::convertStringToDate(etime)))
+            {
+                cout << "[create meeting] succeed!" << endl;
+                getOperation();
             }
+
             else
             {
-                cout << "[error] update password fail!" << endl;
-                getOperation();    
-            } 
-            
+                cout << "[error] create meeting fail!" << endl;
+                getOperation();
+            }
+        }
+
+        else
+        {
+            cout << "[error] create meeting fail!" << endl;
+            getOperation();
+        }
+    }
+
+    else
+    {
+        cout << "[error] command illegal\n";
+        getOperation();
+    }
+}
+
+//ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø»ï¿½ï¿½ï¿½
+void AgendaController::listAllMeetings()
+{
+    if (currentUser != NULL)
+    {
+        cout << endl;
+        //ï¿½ï¿½Ó¡ï¿½ï¿½Í·
+        cout << "[list all meetings]" << endl
+             << endl;
+        cout << left << setw(13) << "title" << setw(13) << "sponsor" << setw(17) << "participator"
+             << setw(17) << "start time" << setw(17) << "end time" << endl;
+
+        MeetingManage *m = MeetingManage::getInstance();
+        list<Meeting> meetings;
+        meetings = m->listAllMeetings(currentUser->getName());
+        printMeetings(meetings);
+        //ï¿½ï¿½Ó¡Meetingï¿½Ð±ï¿½
+
+        getOperation();
+    }
+    //ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½ï¿½Â»ï¿½ï¿½Ã²Ëµï¿½ï¿½ï¿½ï¿½ï¿½
+    else
+    {
+        cout << "[error] command illegal\n";
+        getOperation();
+    }
+}
+//ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½Ð·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
+void AgendaController::listAllSponsorMeetings()
+{
+    if (currentUser != NULL)
+    {
+        cout << endl;
+        //ï¿½ï¿½Ó¡ï¿½ï¿½Í·
+        cout << "[list all sponsor meetings]" << endl
+             << endl;
+        cout << left << setw(13) << "title" << setw(13) << "sponsor" << setw(17) << "participator"
+             << setw(17) << "start time" << setw(17) << "end time" << endl;
+
+        MeetingManage *m = MeetingManage::getInstance();
+        list<Meeting> meetings;
+        meetings = m->listAllSponsorMeetings(currentUser->getName());
+        printMeetings(meetings);
+        //ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Meetingï¿½Ð±ï¿½
+        getOperation();
+    }
+    //ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½ï¿½Â»ï¿½ï¿½Ã²Ëµï¿½ï¿½ï¿½ï¿½ï¿½
+    else
+    {
+        cout << "[error] command illegal\n";
+        getOperation();
+    }
+}
+//ï¿½ï¿½Ó¡ï¿½Î»ï¿½ï¿½ï¿½Meetingï¿½Ð±ï¿½
+void AgendaController::listAllParticipateMeetings()
+{
+    if (currentUser != NULL)
+    {
+        cout << endl;
+        //ï¿½ï¿½Ó¡ï¿½ï¿½Í·
+        cout << "[list all participate meetings]" << endl
+             << endl;
+        cout << left << setw(13) << "title" << setw(13) << "sponsor" << setw(17) << "participator"
+             << setw(17) << "start time" << setw(17) << "end time" << endl;
+
+        MeetingManage *m = MeetingManage::getInstance();
+        list<Meeting> meetings;
+        meetings = m->listAllParticipateMeetings(currentUser->getName());
+        printMeetings(meetings);
+        //ï¿½ï¿½Ó¡ï¿½Î»ï¿½ï¿½ï¿½Meetingï¿½Ð±ï¿½
+        getOperation();
+    }
+    //ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½ï¿½Â»ï¿½ï¿½Ã²Ëµï¿½ï¿½ï¿½ï¿½ï¿½
+    else
+    {
+        cout << "[error] command illegal\n";
+        getOperation();
+    }
+}
+//ï¿½ï¿½ï¿½ï¿½Titleï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½
+void AgendaController::queryMeetingByTitle()
+{
+    if (currentUser != NULL)
+    {
+        cout << endl;
+        cout << "[query meeting] [title]:" << endl;
+        cout << "[query meeting] ";
+
+        string title;
+        cin >> title;
+
+        cout << left << setw(15) << "sponsor" << setw(15) << "participator"
+             << setw(25) << "start time" << setw(25) << "end time";
+
+        Meeting *meeting = NULL;
+        //ï¿½ï¿½ï¿½ï¿½Titleï¿½ï¿½ï¿½ï¿½ï¿½Ä»ï¿½
+        if ((meeting = agendaService.meetingQuery(title)) != NULL)
+        {
+
+            cout << left << setw(15) << meeting->getSponsor() << setw(15) << meeting->getParticipator()
+                 << setw(25) << Date::convertDateToString(meeting->getStartDate()) << setw(25)
+                 << Date::convertDateToString(meeting->getEndDate()) << endl;
+
+            getOperation();
+        }
+        //Ã»ï¿½Ð¸ï¿½Titleï¿½ï¿½ï¿½ï¿½ï¿½Ä»ï¿½
+        else
+        {
+            cout << endl
+                 << endl;
+        }
+
+        getOperation();
+    }
+    //ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½ï¿½Â»ï¿½ï¿½Ã²Ëµï¿½ï¿½ï¿½ï¿½ï¿½
+    else
+    {
+        cout << "[error] command illegal\n";
+        getOperation();
+    }
+}
+//ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½
+void AgendaController::queryMeetingByTimeInterval()
+{
+    if (currentUser != NULL)
+    {
+        cout << endl;
+        cout << "[query meetings] [start time(yyyy-mm-dd/hh:mm)] [end time(yyyy-mm-dd/hh:mm)]" << endl;
+        cout << "[query meetings] ";
+
+        string stime, etime;
+
+        cin >> stime >> etime;
+        //ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ä²»ï¿½Ï·ï¿½
+        if (stime > etime || stime == etime)
+        {
+            cout << "[checked date illegal]!" << endl;
+            getOperation();
+        }
+
+        else
+        {
+            cout << endl
+                 << "[query meetings]" << endl;
+            cout << left << setw(13) << "title" << setw(13) << "sponsor" << setw(17) << "participator"
+                 << setw(17) << "start time" << setw(17) << "end time" << endl;
+            //ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
+            printMeetings(agendaService.meetingQuery(currentUser->getName(), Date::convertStringToDate(stime), Date::convertStringToDate(etime)));
+            getOperation();
+        }
+    }
+    //ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½ï¿½Â»ï¿½ï¿½Ã²Ëµï¿½ï¿½ï¿½ï¿½ï¿½
+    else
+    {
+        cout << "[error] command illegal\n";
+        getOperation();
+    }
+}
+//ï¿½ï¿½ï¿½ï¿½TitleÉ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+void AgendaController::deleteMeetingByTitle()
+{
+    if (currentUser != NULL)
+    {
+        cout << endl;
+        cout << "[delete meeting] [title]" << '\n'
+             << "[delete meeting] ";
+
+        string title;
+        cin >> title;
+        //É¾ï¿½ï¿½ï¿½É¹ï¿½
+        if (agendaService.deleteMeeting(currentUser->getName(), title))
+        {
+            cout << endl
+                 << "[delete meeting by title] succeed!" << endl;
+            getOperation();
+        }
+        //É¾ï¿½ï¿½Ê§ï¿½ï¿½
+        else
+        {
+            cout << endl
+                 << "[error] delete meeting fail!" << endl;
+            getOperation();
+        }
+    }
+    //ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½ï¿½Â»ï¿½ï¿½Ã²Ëµï¿½ï¿½ï¿½ï¿½ï¿½
+    else
+    {
+        cout << "[error] command illegal\n";
+        getOperation();
+    }
+}
+//É¾ï¿½ï¿½ï¿½ï¿½ï¿½Ð»ï¿½ï¿½ï¿½
+void AgendaController::deleteAllMeetings()
+{
+    if (currentUser != NULL)
+    {
+        cout << endl;
+        //É¾ï¿½ï¿½ï¿½É¹ï¿½
+        if (agendaService.deleteAllMeetings(currentUser->getName()))
+        {
+            cout << "[delete all meetings] succeed!" << endl;
+            getOperation();
+        }
+        //É¾ï¿½ï¿½Ê§ï¿½ï¿½
+        else
+        {
+            cout << endl
+                 << "[error] delete all meetings fail!" << endl;
+            getOperation();
+        }
+    }
+    //ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½ï¿½Â»ï¿½ï¿½Ã²Ëµï¿½ï¿½ï¿½ï¿½ï¿½
+    else
+    {
+        cout << "[error] command illegal\n";
+        getOperation();
+    }
+}
+
+void AgendaController::printMeetings(list<Meeting> meetings)
+{
+    //ï¿½Ð±ï¿½Îªï¿½ï¿½
+    if (meetings.empty())
+    {
+        cout << endl;
+    }
+    //ï¿½Ð±ï¿½ï¿½ï¿½Îªï¿½ï¿½
+    else
+    {
+        list<Meeting>::iterator it;
+        for (it = meetings.begin(); it != meetings.end(); it++)
+        {
+            // ï¿½ï¿½Ó¡
+            cout << left << setw(13) << it->getTitle() << setw(13) << it->getSponsor() << setw(17) << it->getParticipator()
+                 << setw(17) << Date::convertDateToString(it->getStartDate()) << setw(17)
+                 << Date::convertDateToString(it->getEndDate()) << endl;
+        }
+    }
+}
+
+AgendaController::AgendaController()
+{
+    currentUser = NULL;
+}
+
+//ï¿½ï¿½ï¿½Ã²Ëµï¿½ï¿½ï¿½ï¿½ï¿½
+void AgendaController::getOperation()
+{
+    if (currentUser == NULL)
+    {
+        cout << "\n-------------------------Agenda-----------------------------\n";
+        cout << "Action:\n";
+        cout << "l   - log in Agenada by user name and password\n";
+        cout << "r   - register an Agenda account\n";
+        cout << "q   - quit Agenda\n";
+        cout << "--------------------------------------------------------------\n";
+        cout << "\nAgenda : ~$ ";
+    }
+    else
+    {
+        cout << endl
+             << "Agenda@" << currentUser->getName() << " : # ";
+    }
+
+    string input;
+    input = "";
+    cin >> input;
+    if (input == "")
+    {
+        cin.clear();
+        cin.rdstate();
+        cin.fixed;
+        fclose(stdin);
+        fclose(stdout);
+    }
+    //ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½
+    executeOperation(input);
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+}
+
+void AgendaController::updateUserPassword()
+{
+    if (currentUser != NULL)
+    {
+        cout << endl;
+        cout << "[update user] [password]" << '\n'
+             << "[update user] ";
+
+        string password;
+        cin >> password;
+
+        if (agendaService.updateUserPassword(*currentUser, password))
+        {
+            cout << "update password succeed!" << endl;
+            getOperation();
         }
         else
         {
-              cout << "[error] command illegal\n";
-              getOperation();     
-        }  
+            cout << "[error] update password fail!" << endl;
+            getOperation();
+        }
     }
-    
-    void AgendaController::updateUserEmail()
+    else
     {
-        if(currentUser != NULL){
-		    cout<<endl;
-		    cout<<"[update user] [email]"<<'\n'
-			    <<"[update user] ";
-			    
-			string Email;
-			cin >> Email;
-			
-			if(agendaService.updateUserEmail(*currentUser,Email))
-			{
-               cout << "update email succeed!"<< endl;
-               getOperation();
-            }
-            else
-            {
-                cout << "[error] update email fail!" << endl;
-                getOperation();    
-            } 
-            
+        cout << "[error] command illegal\n";
+        getOperation();
+    }
+}
+
+void AgendaController::updateUserEmail()
+{
+    if (currentUser != NULL)
+    {
+        cout << endl;
+        cout << "[update user] [email]" << '\n'
+             << "[update user] ";
+
+        string Email;
+        cin >> Email;
+
+        if (agendaService.updateUserEmail(*currentUser, Email))
+        {
+            cout << "update email succeed!" << endl;
+            getOperation();
         }
         else
         {
-              cout << "[error] command illegal\n";
-              getOperation();     
-        }  
+            cout << "[error] update email fail!" << endl;
+            getOperation();
+        }
     }
-    void AgendaController::updateUserPhone()
+    else
     {
-        if(currentUser != NULL){
-		    cout<<endl;
-		    cout<<"[update user] [phone]"<<'\n'
-			    <<"[update user] ";
-			    
-			string phone;
-			cin >> phone;
-			
-			if(agendaService.updateUserPhone(*currentUser,phone))
-			{
-               cout << "update phone succeed!"<< endl;
-               getOperation();
-            }
-            else
-            {
-                cout << "[error] update phone fail!" << endl;
-                getOperation();    
-            } 
-            
+        cout << "[error] command illegal\n";
+        getOperation();
+    }
+}
+void AgendaController::updateUserPhone()
+{
+    if (currentUser != NULL)
+    {
+        cout << endl;
+        cout << "[update user] [phone]" << '\n'
+             << "[update user] ";
+
+        string phone;
+        cin >> phone;
+
+        if (agendaService.updateUserPhone(*currentUser, phone))
+        {
+            cout << "update phone succeed!" << endl;
+            getOperation();
         }
         else
         {
-              cout << "[error] command illegal\n";
-              getOperation();     
-        }  
+            cout << "[error] update phone fail!" << endl;
+            getOperation();
+        }
     }
-    
-    void AgendaController::updateMeetingParticipator()
+    else
     {
-        if(currentUser != NULL){
-		    cout<<endl;
-		    cout<<"[update meeting] [title] [participator]"<<'\n'
-			    <<"[update meeting] "; 
-                
-            string participator,title;
-            cin >> title >> participator;
-                      
-        if(agendaService.meetingQuery (title )!=NULL)
-		{
-        UserManage *userManage = UserManage::getInstance();          
-       //²Î»áÕß´æÔÚ¸ÃÓÃ»§µÄ»° 
-		if((userManage->findUserByName(participator)) != NULL){
-            
-        if(agendaService.updateMeetingParticipator(title,participator))
-		{
-               cout << "update participator succeed!"<< endl;
-               getOperation();
-          }
+        cout << "[error] command illegal\n";
+        getOperation();
+    }
+}
+
+void AgendaController::updateMeetingParticipator()
+{
+    if (currentUser != NULL)
+    {
+        cout << endl;
+        cout << "[update meeting] [title] [participator]" << '\n'
+             << "[update meeting] ";
+
+        string participator, title;
+        cin >> title >> participator;
+
+        if (agendaService.meetingQuery(title) != NULL)
+        {
+            UserManage *userManage = UserManage::getInstance();
+            //ï¿½Î»ï¿½ï¿½ß´ï¿½ï¿½Ú¸ï¿½ï¿½Ã»ï¿½ï¿½Ä»ï¿½
+            if ((userManage->findUserByName(participator)) != NULL)
+            {
+
+                if (agendaService.updateMeetingParticipator(title, participator))
+                {
+                    cout << "update participator succeed!" << endl;
+                    getOperation();
+                }
+                else
+                {
+                    cout << "[error] update participator fail!" << endl;
+                    getOperation();
+                }
+            }
             else
             {
                 cout << "[error] update participator fail!" << endl;
-                getOperation();    
-            } 
-            
+                getOperation();
+            }
         }
         else
         {
-                cout << "[error] update participator fail!" << endl;
-                getOperation();   
+            cout << "[error] unavailable meeting!" << endl;
+            getOperation();
         }
-		}
-		else
-		{
-                cout << "[error] unavailable meeting!" << endl;
-                getOperation();    
-        } 
-		}
-      else
-        {
-              cout << "[error] command illegal\n";
-              getOperation();    
-        } 
-             
-           
-
     }
-      
-  
-    
-    void AgendaController::updateMeetingStartDate()
+    else
     {
-        if(currentUser != NULL){
-		    cout<<endl;
-		    cout<<"[update meeting] [title] [statrDate]"<<'\n'
-			    <<"[update meeting] "; 
-                
-            string title,startDate;
-            cin >> title >> startDate;
-         
-		   if(agendaService.meetingQuery (title )!=NULL)
-		{
-         
-        if(Date::isValid(Date::convertStringToDate(startDate))&& Date::convertStringToDate(startDate)<(agendaService.meetingQuery(title))->getEndDate())
-        {  
-            list <Meeting> smeeting;
-            list <Meeting> pmeeting;
-            MeetingManage *meetingManage = MeetingManage::getInstance();
+        cout << "[error] command illegal\n";
+        getOperation();
+    }
+}
 
+void AgendaController::updateMeetingStartDate()
+{
+    if (currentUser != NULL)
+    {
+        cout << endl;
+        cout << "[update meeting] [title] [statrDate]" << '\n'
+             << "[update meeting] ";
 
-             pmeeting = agendaService.meetingQuery((meetingManage->queryMeetingByTitle(title))->getParticipator(),Date::convertStringToDate(startDate),(agendaService.meetingQuery(title))->getStartDate());
-                            
-            smeeting = agendaService.meetingQuery(currentUser->getName(),Date::convertStringToDate(startDate),(agendaService.meetingQuery(title))->getStartDate());
+        string title, startDate;
+        cin >> title >> startDate;
 
-
-            if(smeeting.empty()&&pmeeting.empty())               
+        if (agendaService.meetingQuery(title) != NULL)
         {
-                        
-            if(agendaService.updateMeetingStartDate(title,startDate)){
-                  cout << "update startDate succeed!"<< endl;
-               getOperation();
-            } 
+
+            if (Date::isValid(Date::convertStringToDate(startDate)) && Date::convertStringToDate(startDate) < (agendaService.meetingQuery(title))->getEndDate())
+            {
+                list<Meeting> smeeting;
+                list<Meeting> pmeeting;
+                MeetingManage *meetingManage = MeetingManage::getInstance();
+
+                pmeeting = agendaService.meetingQuery((meetingManage->queryMeetingByTitle(title))->getParticipator(), Date::convertStringToDate(startDate), (agendaService.meetingQuery(title))->getStartDate());
+
+                smeeting = agendaService.meetingQuery(currentUser->getName(), Date::convertStringToDate(startDate), (agendaService.meetingQuery(title))->getStartDate());
+
+                if (smeeting.empty() && pmeeting.empty())
+                {
+
+                    if (agendaService.updateMeetingStartDate(title, startDate))
+                    {
+                        cout << "update startDate succeed!" << endl;
+                        getOperation();
+                    }
+                    else
+                    {
+                        cout << "[error] update startDate fail!" << endl;
+                        getOperation();
+                    }
+                }
+                else
+                {
+                    cout << "[error] update startDate fail!" << endl;
+                    getOperation();
+                }
+            }
+
             else
             {
                 cout << "[error] update startDate fail!" << endl;
-                getOperation();    
-            } 
-           
+                getOperation();
+            }
         }
         else
         {
-                cout << "[error] update startDate fail!" << endl;
-                getOperation();       
-        }   
-            
-        }
-        
-        else
-        {
-                cout << "[error] update startDate fail!" << endl;
-                getOperation();  
-        }
-		 }
-		 else
-        {
-                cout << "[error] unavailable meeting!" << endl;
-                getOperation();  
+            cout << "[error] unavailable meeting!" << endl;
+            getOperation();
         }
 
-        } //end if
-        else
-        {
-              cout << "[error] command illegal\n";
-              getOperation();     
-        }  
-    }
-    
-    
-    
-    
-    
-    
-    void AgendaController::updateMeetingEndDate()
+    } //end if
+    else
     {
-        if(currentUser != NULL){
-		    cout<<endl;
-		    cout<<"[update meeting] [title] [endDate]"<<'\n'
-			    <<"[update meeting] "; 
-                
-            string title,endDate;
-            cin >> title >> endDate;
-          
-		  if(agendaService.meetingQuery (title )!=NULL)
-		{   
-        if(Date::isValid(Date::convertStringToDate(endDate))&&Date::convertStringToDate(endDate)>(agendaService.meetingQuery(title))->getStartDate())
-        {  
-            list <Meeting> smeeting;
-            list <Meeting> pmeeting;
-            MeetingManage *meetingManage = MeetingManage::getInstance();
+        cout << "[error] command illegal\n";
+        getOperation();
+    }
+}
 
-             pmeeting = agendaService.meetingQuery((meetingManage->queryMeetingByTitle(title))->getParticipator(),(agendaService.meetingQuery(title))->getEndDate(),Date::convertStringToDate(endDate));
-                            
-             smeeting = agendaService.meetingQuery(currentUser->getName(),(agendaService.meetingQuery(title))->getEndDate(),Date::convertStringToDate(endDate));
-            if(smeeting.empty()&&pmeeting.empty())               
+void AgendaController::updateMeetingEndDate()
+{
+    if (currentUser != NULL)
+    {
+        cout << endl;
+        cout << "[update meeting] [title] [endDate]" << '\n'
+             << "[update meeting] ";
+
+        string title, endDate;
+        cin >> title >> endDate;
+
+        if (agendaService.meetingQuery(title) != NULL)
         {
-            
-            
-            
-            if(agendaService.updateMeetingStartDate(title,endDate)){
-                  cout << "update endDate succeed!"<< endl;
-               getOperation();
-            } 
+            if (Date::isValid(Date::convertStringToDate(endDate)) && Date::convertStringToDate(endDate) > (agendaService.meetingQuery(title))->getStartDate())
+            {
+                list<Meeting> smeeting;
+                list<Meeting> pmeeting;
+                MeetingManage *meetingManage = MeetingManage::getInstance();
+
+                pmeeting = agendaService.meetingQuery((meetingManage->queryMeetingByTitle(title))->getParticipator(), (agendaService.meetingQuery(title))->getEndDate(), Date::convertStringToDate(endDate));
+
+                smeeting = agendaService.meetingQuery(currentUser->getName(), (agendaService.meetingQuery(title))->getEndDate(), Date::convertStringToDate(endDate));
+                if (smeeting.empty() && pmeeting.empty())
+                {
+
+                    if (agendaService.updateMeetingStartDate(title, endDate))
+                    {
+                        cout << "update endDate succeed!" << endl;
+                        getOperation();
+                    }
+                    else
+                    {
+                        cout << "[error] update endDate fail!" << endl;
+                        getOperation();
+                    }
+                }
+                else
+                {
+                    cout << "[error] update endDate fail!" << endl;
+                    getOperation();
+                }
+            }
+
             else
             {
                 cout << "[error] update endDate fail!" << endl;
-                getOperation();    
-            } 
-           
+                getOperation();
+            }
         }
         else
         {
-                cout << "[error] update endDate fail!" << endl;
-                getOperation();       
-        }   
-            
+            cout << "[error] unavailable meeting!";
+            getOperation();
         }
-        
-        else
-        {
-                cout << "[error] update endDate fail!" << endl;
-                getOperation();  
-        }
-             
-		  }
-		  else
-	    {
-              cout << "[error] unavailable meeting!";
-              getOperation();     
-        }  
 
-		}//end if
-        else
-        {
-              cout << "[error] command illegal\n";
-              getOperation();     
-        }  
-    }
-       
-    void AgendaController::updateMeetingTitle()
+    } //end if
+    else
     {
-        if(currentUser != NULL){
-		    cout<<endl;
-		    cout<<"[update meeting] [title] [newTitle]"<<'\n'
-			    <<"[update meeting] "; 
-                
-            string title,newtitle;
-            cin >> title >> newtitle;
+        cout << "[error] command illegal\n";
+        getOperation();
+    }
+}
 
-		  if(agendaService.meetingQuery (title )!=NULL)
-		{   
-            
-        if(agendaService.updateMeetingTitle(title,newtitle))
-		{
-               cout << "update title succeed!"<< endl;
-               getOperation();
-           }
+void AgendaController::updateMeetingTitle()
+{
+    if (currentUser != NULL)
+    {
+        cout << endl;
+        cout << "[update meeting] [title] [newTitle]" << '\n'
+             << "[update meeting] ";
+
+        string title, newtitle;
+        cin >> title >> newtitle;
+
+        if (agendaService.meetingQuery(title) != NULL)
+        {
+
+            if (agendaService.updateMeetingTitle(title, newtitle))
+            {
+                cout << "update title succeed!" << endl;
+                getOperation();
+            }
             else
             {
                 cout << "[error] update title fail!" << endl;
-                getOperation();    
-            } 
-            
+                getOperation();
+            }
         }
-		  else
-	   {
-              cout << "[error] unavailable meeting!";
-              getOperation();     
-        }  
-
-		}
         else
         {
-              cout << "[error] command illegal\n";
-              getOperation();     
-        }  
-    }    
+            cout << "[error] unavailable meeting!";
+            getOperation();
+        }
+    }
+    else
+    {
+        cout << "[error] command illegal\n";
+        getOperation();
+    }
+}

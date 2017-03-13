@@ -23,7 +23,7 @@ private:
 	string phone;
 
 	MeetingManage *meetingManage; 
-    //meetingManage  管理会议列表 
+   
 
 public:
 	User( string n, string pw, string e, string ph );
@@ -39,7 +39,7 @@ public:
 
 	string getPhone( ) ;
 	void setPhone( string p );
-//获得用户会议列表 
+  
 	list<Meeting> getAllMeetings() ;
 	list<Meeting> getAllSponsorMeetings() ;
 	list<Meeting> getAllParticipateMeetings() ;

@@ -1,13 +1,13 @@
 #include"AgendaService.h"
 
-   // 默认构造函数 
+  
     AgendaService::AgendaService( )
     {
         userManage = UserManage::getInstance();
         meetingManage = MeetingManage::getInstance();
         Load();
     }
-    //析构函数
+ 
     AgendaService::~AgendaService()
     {
         Save(); 
@@ -25,27 +25,27 @@
         meetingManage->save();
     }
     
-    // LogIn 
+   
 	User* AgendaService::userLogIn( string userName, string password )
 	{
         User *u;
-        //账号密码相对  返回用户指针 
+        
         if((u = userManage->findUserByName(userName))!=NULL && u->getPassword() == password)
               return u;
-        //不对的话，返回空指针 
+    
         else
               return NULL;
         
     }
-    // 用户注册 
+    
 	bool AgendaService::userRegister( string userName, string password, string email, string phone )
 	{ 
           return userManage->createUser(userName,password,email,phone);        
     }
-    
+
     // deleteUser
-	bool AgendaService::deleteUser( User user )
-	{
+    bool AgendaService::deleteUser(User user)
+    {
         return userManage->deleteUser(user);
     }
     //listAllUsers

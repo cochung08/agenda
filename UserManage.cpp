@@ -4,7 +4,7 @@ using namespace std;
 
 bool UserManage::instanceFlag = false;
 UserManage* UserManage::instance = NULL;
-//只能实例化一次 
+ 
 UserManage* UserManage::getInstance()
     {
         if(instanceFlag)
@@ -28,7 +28,7 @@ UserManage::~UserManage()
         delete instance;
        }
     }
-//根据名字找到User  返回指针 
+ 
 User* UserManage::findUserByName( string name )
 {
     list<User>::iterator it;
@@ -41,9 +41,9 @@ User* UserManage::findUserByName( string name )
     
     return NULL;
 }
-//创建一个新的对象 
+ 
 bool UserManage:: createUser( string name, string password, string email, string phone ){
-	//如果名字存在，则不再创建 
+	  
     if( findUserByName(name) != NULL )
 		return false;
 
@@ -51,10 +51,10 @@ bool UserManage:: createUser( string name, string password, string email, string
 	users.insert( users.end(), newUser );
 	return true;
 }
-//删除用户 
+ 
 bool UserManage::deleteUser( User u )
 {
-    //如果用户还有会议，则不执行删除操作 
+    
     if(!((u.getAllMeetings()).empty()))
           return false;
     else
@@ -75,7 +75,7 @@ bool UserManage::deleteUser( User u )
 
 
 
-//更新用户密码 
+ 
 bool UserManage::updateUserPassword( User u, string newPassword ){
 	list<User>::iterator it;
 
@@ -88,7 +88,7 @@ bool UserManage::updateUserPassword( User u, string newPassword ){
 
 	return false;
 }
-//更新用户Email 
+ 
 bool UserManage::updateUserEmail( User u, string newEmail )
 {
     list<User>::iterator it;
@@ -102,7 +102,7 @@ bool UserManage::updateUserEmail( User u, string newEmail )
 
 	return false;
 }
-//更新用户电话 
+ 
 bool UserManage::updateUserPhone( User u, string newPhone )
 {
    	list<User>::iterator it;
@@ -116,7 +116,7 @@ bool UserManage::updateUserPhone( User u, string newPhone )
 
 	return false; 
 }
-//返回所有用户信息 
+ 
 list<User> UserManage::listAllUsers( )
 {
    return users;
